@@ -13,7 +13,7 @@ using curated Chain-of-Thought (CoT) datasets.
 
 The processed datasets are hosted on Hugging Face:
 
-https://huggingface.co/datasets/ashot/finance-slm-distillation-data
+https://huggingface.co/datasets/ash0t/finance-slm-distillation-data
 
 Datasets include:
 - filtered reasoning samples
