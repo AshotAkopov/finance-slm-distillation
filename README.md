@@ -47,9 +47,6 @@ finance-slm-distillation/
 │   └── 04_error_analysis.ipynb
 │
 ├── data/
-│   ├── raw/
-│   │   └── df_raw.parquet
-│   │
 │   ├── processed/
 │   │   ├── reasoning_train.jsonl
 │   │   ├── response_train.jsonl
