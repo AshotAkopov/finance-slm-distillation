@@ -1,0 +1,107 @@
+dataset:
+  name: "heladell/Finance_DeepSeek-R1-Distill-dataset"
+  split: "train"
+
+paths:
+  processed_dir: "data/processed"
+  reports_dir: "reports"
+  figures_dir: "reports/figures"
+  tables_dir: "reports/tables"
+
+preprocessing:
+  random_seed: 42
+  test_size: 0.10
+  language: "EN"
+  duplicate_subset:
+    - "instruction"
+    - "response"
+  excluded_categories:
+    - "Coding & Debugging"
+    - "Advice seeking"
+    - "Editing"
+    - "Brainstorming"
+    - "Role playing"
+    - "Creative writing"
+
+finance_filter:
+  preserve_math_category: true
+  keywords:
+    - "ebitda"
+    - "cash flow"
+    - "free cash flow"
+    - "fcf"
+    - "capex"
+    - "valuation"
+    - "revenue"
+    - "profit"
+    - "margin"
+    - "dividend"
+    - "bond"
+    - "equity"
+    - "stock"
+    - "portfolio"
+    - "asset"
+    - "liability"
+    - "yield"
+    - "volatility"
+    - "option"
+    - "derivative"
+    - "credit"
+    - "interest rate"
+    - "inflation"
+    - "market risk"
+    - "loan"
+    - "mortgage"
+    - "insurance"
+    - "solvency"
+    - "scr"
+    - "actuarial"
+    - "taeg"
+    - "balance sheet"
+    - "income statement"
+    - "financial statement"
+    - "return on equity"
+    - "roe"
+    - "roa"
+    - "gdp"
+    - "federal reserve"
+    - "fed"
+    - "central bank"
+    - "monetary policy"
+
+reasoning_quality:
+  min_reasoning_words: 60
+  min_final_answer_words: 20
+  max_reasoning_instruction_ratio: 20
+  max_noise_score_global: 12
+  noise_words:
+    - "wait"
+    - "maybe"
+    - "hmm"
+    - "perhaps"
+    - "let me think"
+    - "actually"
+  structure_markers:
+    - "first"
+    - "then"
+    - "finally"
+    - "therefore"
+    - "step"
+    - "1."
+    - "2."
+    - "so,"
+  formula_symbols:
+    - "="
+    - "+"
+    - "-"
+    - "/"
+    - "*"
+    - "%"
+
+prompt:
+  system_message: |
+    You are an expert assistant in quantitative finance, actuarial science, and financial risk analysis.
+
+    Provide accurate, concise, and well-structured answers.
+
+    When solving quantitative problems, clearly state assumptions, formulas, and calculations when relevant.

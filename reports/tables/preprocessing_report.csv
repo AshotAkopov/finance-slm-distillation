@@ -1,0 +1,8 @@
+step,samples,retention_rate,removed_samples,step_retention_rate
+Initial dataset,26952,100.0,0,100.0
+Deduplication,23972,88.94,2980,88.94
+Remove missing responses,23971,88.94,1,100.0
+Relevant category filtering,23478,87.11,493,97.94
+English-only filtering,23219,86.15,259,98.9
+Finance filtering,22786,84.54,433,98.14
+Reasoning quality filtering,13787,51.15,8999,60.51

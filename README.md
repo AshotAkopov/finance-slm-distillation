@@ -1,248 +1,63 @@
-# Finance SLM Distillation
+# Finance Instruction Dataset Preparation Pipeline
 
-Reasoning distillation pipeline for Small Language Models (SLMs) specialized in quantitative finance, actuarial science and mathematical reasoning.
+This project prepares a curated finance-oriented instruction dataset for conversational supervised fine-tuning.
 
-The project focuses on transferring reasoning capabilities from DeepSeek-style Chain-of-Thought (CoT) traces toward compact instruction-tuned models such as Qwen2.5-7B using supervised fine-tuning (SFT) and QLoRA.
-
----
-
-# Objectives
-
-The main objectives of this project are:
-
-- improve financial reasoning capabilities of SLMs;
-- improve multi-step quantitative reasoning;
-- reduce numerical hallucinations;
-- produce concise and professional final answers;
-- study reasoning transfer through Chain-of-Thought distillation.
-
-The training strategy follows a two-stage pipeline:
-
-1. reasoning transfer using explicit `<think>` traces;
-2. response alignment using concise final answers only.
-
----
-
-# Project Structure
+## Project Structure
 
 ```text
-finance-slm-distillation/
-│
-├── src/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── data_preparation.py
-│   ├── train.py
-│   ├── evaluation.py
-│   └── inference.py
-│
+finance_sft_dataset_pipeline/
 ├── configs/
-│   ├── training.yaml
-│   └── inference.yaml
-│
-├── notebooks/
-│   ├── 01_dataset_preparation.ipynb
-│   ├── 02_training_lora.ipynb
-│   ├── 03_evaluation.ipynb
-│   └── 04_error_analysis.ipynb
-│
+│   └── config.yaml
 ├── data/
 │   ├── raw/
-│   │   └── df_raw.parquet
-│   │
-│   ├── processed/
-│   │   ├── reasoning_train.jsonl
-│   │   ├── response_train.jsonl
-│   │   ├── test.jsonl
-│   │   ├── reasoning_train.parquet
-│   │   ├── response_train.parquet
-│   │   └── test.parquet
-│   │
-│   └── evaluation/
-│       ├── predictions.csv
-│       ├── benchmark_results.csv
-│       └── hallucination_analysis.csv
-│
-├── adapters/
-│   └── qwen2.5-7b-finance-lora/
-│
+│   └── processed/
+├── notebooks/
 ├── reports/
 │   ├── figures/
-│   ├── tables/
-│   └── final_report.pdf
-│
+│   └── tables/
+├── src/
+│   └── prepare_dataset.py
 ├── requirements.txt
 └── README.md
 ```
 
----
-
-# Dataset
-
-The processed datasets are hosted on Hugging Face:
-
-https://huggingface.co/datasets/ash0t/finance-slm-distillation-data
-
-The repository contains three datasets:
-
-| Dataset | Description |
-|---|---|
-| `reasoning_train` | examples containing reasoning traces (`<think>`) |
-| `response_train` | concise final-answer-only examples |
-| `test` | evaluation dataset without reasoning traces |
-
-Parquet versions are also provided for analysis and reproducibility purposes.
-
----
-
-# Dataset Preparation Pipeline
-
-The dataset preparation pipeline includes:
-
-- response filtering;
-- language filtering;
-- finance-specific heuristic filtering;
-- reasoning trace extraction;
-- reasoning quality heuristics;
-- train/test stratified split;
-- JSONL export for SFT training.
-
-The preparation script follows industrial Python practices:
-- PEP8;
-- docstrings;
-- centralized configuration;
-- logging;
-- modular exports.
-
----
-
-# Training Pipeline
-
-The fine-tuning strategy follows two sequential phases.
-
-## Phase 1 — Reasoning Transfer
-
-The model is first trained on `reasoning_train`.
-
-This phase teaches:
-- Chain-of-Thought structures;
-- financial reasoning patterns;
-- multi-step calculations;
-- quantitative logic.
-
-## Phase 2 — Response Alignment
-
-The same LoRA adapters are then continuously trained on `response_train`.
-
-This phase improves:
-- conciseness;
-- response clarity;
-- professional formatting;
-- suppression of verbose reasoning traces.
-
----
-
-# Models
-
-Base model:
-
-```text
-unsloth/Qwen2.5-7B-Instruct-bnb-4bit
-```
-
-Training framework:
-- Hugging Face Transformers
-- TRL
-- Unsloth
-- QLoRA
-- PEFT / LoRA
-
----
-
-# Example Usage
-
-## Dataset Preparation
+## Setup
 
 ```bash
-python -m src.data_preparation
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-## Training
+On Windows:
 
 ```bash
-python -m src.train
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-## Evaluation
+## Run
 
 ```bash
-python -m src.evaluation
+python src/prepare_dataset.py --config configs/config.yaml
 ```
 
----
+## Outputs
 
-# Data Format
+The pipeline exports:
 
-Training samples follow a Qwen-compatible chat template:
+- `data/processed/train_sft.jsonl`
+- `data/processed/test_sft.jsonl`
+- `data/processed/df_filtered.parquet`
+- `data/processed/df_clean.parquet`
+- `data/processed/df_train.parquet`
+- `data/processed/df_test.parquet`
+- `reports/tables/preprocessing_report.csv`
+- `reports/tables/finance_filtering_table.csv`
+- `reports/tables/reasoning_quality_table.csv`
+- `reports/figures/*.png`
 
-```text
-<|im_start|>system
-...
-<|im_end|>
+## Notes
 
-<|im_start|>user
-...
-<|im_end|>
-
-<|im_start|>assistant
-...
-<|im_end|>
-```
-
-JSONL schema:
-
-```json
-{
-  "text": "<formatted conversation>"
-}
-```
-
----
-
-# Intended Use
-
-This project is intended for:
-- research on reasoning distillation;
-- financial LLM experimentation;
-- SLM fine-tuning;
-- QLoRA experimentation;
-- Chain-of-Thought transfer research.
-
----
-
-# Limitations
-
-The finance filtering strategy is heuristic and keyword-based.
-
-As a result:
-- some false positives may remain;
-- some relevant examples may be excluded;
-- reasoning quality evaluation remains partially heuristic.
-
-This project is primarily intended for research and experimentation purposes.
-
----
-
-# Acknowledgements
-
-Original dataset:
-
-```text
-heladell/Finance_DeepSeek-R1-Distill-dataset
-```
-
-Base model:
-
-```text
-unsloth/Qwen2.5-7B-Instruct-bnb-4bit
-```
+The finance filtering step is intentionally interpretable and auditable. It relies on keyword-based filtering and may produce false positives or false negatives.
